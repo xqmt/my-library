@@ -691,42 +691,84 @@ local Library do
         end
     end
 
+    -- ============================================================
+    -- [FIX] CustomFont - แก้ให้ Smallest Pixel ขึ้น
+    -- ============================================================
     local CustomFont = { } do
         function CustomFont:New(Name, Weight, Style, Data)
-            if isfile(Library.Folders.Assets .. "/" .. Name .. ".json") then
-                return Font.new(getcustomasset(Library.Folders.Assets .. "/" .. Name .. ".json"))
+            local JsonPath = Library.Folders.Assets .. "/" .. Name .. ".json"
+            local TtfPath  = Library.Folders.Assets .. "/" .. Name .. ".ttf"
+
+            -- ตรวจสอบ cache เดิม ถ้าโหลดพังให้ลบทิ้ง
+            if isfile(JsonPath) and isfile(TtfPath) then
+                local ok, result = pcall(function()
+                    return Font.new(getcustomasset(JsonPath))
+                end)
+                if ok and result then
+                    return result
+                end
+                pcall(function() delfile(JsonPath) end)
+                pcall(function() delfile(TtfPath) end)
             end
 
-            if not isfile(Library.Folders.Assets .. "/" .. Name .. ".ttf") then 
-                writefile(Library.Folders.Assets .. "/" .. Name .. ".ttf", game:HttpGet(Data.Url))
+            -- ดาวน์โหลด TTF ถ้ายังไม่มี
+            if not isfile(TtfPath) then
+                local ok, contents = pcall(function()
+                    return game:HttpGet(Data.Url)
+                end)
+                if not ok or not contents or #contents < 2000 then
+                    warn("[Library] Font download failed for " .. Name .. " (URL may be dead)")
+                    return nil
+                end
+                writefile(TtfPath, contents)
             end
 
+            -- สร้าง JSON ให้ถูก format (style = "normal", weight = 400)
             local FontData = {
                 name = Name,
-                faces = { {
-                    name = "Regular",
-                    weight = Weight,
-                    style = Style,
-                    assetId = getcustomasset(Library.Folders.Assets .. "/" .. Name .. ".ttf")
-                } }
+                faces = {
+                    {
+                        name    = "Regular",
+                        weight  = Weight or 400,
+                        style   = Style  or "normal",
+                        assetId = getcustomasset(TtfPath)
+                    }
+                }
             }
 
-            writefile(Library.Folders.Assets .. "/" .. Name .. ".json", HttpService:JSONEncode(FontData))
-            return Font.new(getcustomasset(Library.Folders.Assets .. "/" .. Name .. ".json"))
+            writefile(JsonPath, HttpService:JSONEncode(FontData))
+
+            local ok, result = pcall(function()
+                return Font.new(getcustomasset(JsonPath))
+            end)
+            return ok and result or nil
         end
 
         function CustomFont:Get(Name)
-            if isfile(Library.Folders.Assets .. "/" .. Name .. ".json") then
-                return Font.new(getcustomasset(Library.Folders.Assets .. "/" .. Name .. ".json"))
+            local JsonPath = Library.Folders.Assets .. "/" .. Name .. ".json"
+            local TtfPath  = Library.Folders.Assets .. "/" .. Name .. ".ttf"
+            if isfile(JsonPath) and isfile(TtfPath) then
+                local ok, result = pcall(function()
+                    return Font.new(getcustomasset(JsonPath))
+                end)
+                if ok then return result end
             end
+            return nil
         end
-
-        CustomFont:New("Smallest-Pixel-7", 200, "Regular", {
-       Url = "https://raw.githubusercontent.com/viera1337/primordial/main/Smallest_Pixel_7.ttf"
-     })
-
-      Library.Font = CustomFont:Get("Smallest-Pixel-7")
     end
+
+    -- โหลดฟอนต์พร้อม fallback (สำคัญ: ต้องไม่ปล่อยให้ Library.Font เป็น nil)
+    local LoadedFont = CustomFont:New("Smallest-Pixel-7", 400, "normal", {
+        Url = "https://raw.githubusercontent.com/viera1337/primordial/main/Smallest_Pixel_7.ttf"
+    })
+
+    if LoadedFont then
+        Library.Font = LoadedFont
+    else
+        Library.Font = Font.fromEnum(Enum.Font.Code)
+        warn("[Library] Falling back to Enum.Font.Code (Smallest-Pixel-7 failed)")
+    end
+    -- ============================================================
 
     Library.Holder = Instances:Create("ScreenGui", {
         Parent = gethui(),
@@ -770,7 +812,6 @@ local Library do
         return MathFloor(Number * Multiplier) / Multiplier
     end
 
-    -- [FIX #1] IsMouseOverFrame รองรับ Touch + เพิ่ม IsPositionOverFrame
     Library.IsMouseOverFrame = function(self, Frame)
         local AbsolutePosition = Frame.AbsolutePosition
         local AbsoluteSize = Frame.AbsoluteSize
@@ -2610,8 +2651,6 @@ local Library do
             return Dropdown.Value
         end
 
-        -- [FIX] ปิด Dropdown เมื่อคลิกข้างนอก — ใช้ Input.Position แทน GetMouseLocation
-        -- เพราะ ScreenGui ตั้ง IgnoreGuiInset = true ทำให้ตำแหน่งคลาดกัน 36px
         Library:Connect(UserInputService.InputBegan, function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 if Debounce then 
@@ -3352,7 +3391,6 @@ local Library do
             Colorpicker:SetOpen(not Colorpicker.IsOpen)
         end)
 
-        -- [FIX #10] Close Colorpicker รองรับ Touch + ใช้ IsPositionOverFrame
         Library:Connect(UserInputService.InputBegan, function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 if Debounce then 
@@ -3371,7 +3409,6 @@ local Library do
             end
         end)
 
-        -- [FIX #3] Palette InputBegan รองรับ Touch
         Items["Palette"]:Connect("InputBegan", function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 SlidingPalette = true
@@ -3379,14 +3416,12 @@ local Library do
             end
         end)
 
-        -- [FIX #4] Palette InputEnded รองรับ Touch
         Items["Palette"]:Connect("InputEnded", function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 SlidingPalette = false
             end
         end)
 
-        -- [FIX #5] Hue InputBegan รองรับ Touch
         Items["Hue"]:Connect("InputBegan", function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 SlidingHue = true
@@ -3394,14 +3429,12 @@ local Library do
             end
         end)
 
-        -- [FIX #6] Hue InputEnded รองรับ Touch
         Items["Hue"]:Connect("InputEnded", function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 SlidingHue = false
             end
         end)
 
-        -- [FIX #7] Alpha InputBegan รองรับ Touch
         Items["Alpha"]:Connect("InputBegan", function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 SlidingAlpha = true
@@ -3409,14 +3442,12 @@ local Library do
             end
         end)
 
-        -- [FIX #8] Alpha InputEnded รองรับ Touch
         Items["Alpha"]:Connect("InputEnded", function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 SlidingAlpha = false
             end
         end)
 
-        -- [FIX #9] InputChanged รองรับ Touch
         Library:Connect(UserInputService.InputChanged, function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then
                 if SlidingPalette then
@@ -3785,7 +3816,6 @@ local Library do
             Keybind:SetOpen(not Keybind.IsOpen)
         end)
 
-        -- [FIX] Keybind ปิดเมื่อคลิกข้างนอก — ใช้ IsPositionOverFrame แทน IsMouseOverFrame
         Library:Connect(UserInputService.InputBegan, function(Input)
             if tostring(Input.KeyCode) == Keybind.Key or tostring(Input.UserInputType) == Keybind.Key then
                 if Keybind.Mode == "Toggle" then 
@@ -4328,7 +4358,6 @@ local Library do
             }):AddToTheme({Color = "Border"})
         end
 
-        -- [FIX #11] Mobile Floating Toggle Button (Watermark style)
         local IsMobile = UserInputService.TouchEnabled and not UserInputService.MouseEnabled
 
         if IsMobile then
@@ -4336,8 +4365,8 @@ local Library do
                 Parent = self.Holder.Instance,
                 Name = "\0",
                 AnchorPoint = Vector2New(0, 0),
-                Position = UDim2New(0, 15, 0, 75), -- ปรับตำแหน่ง Y จาก 10 เป็น 75 เพื่อหลบปุ่ม Roblox ด้านบน
-                Size = UDim2New(0, 0, 0, 32), -- ปรับความสูงจาก 28 เป็น 36 ให้ใหญ่ขึ้นตามโจทย์
+                Position = UDim2New(0, 15, 0, 75),
+                Size = UDim2New(0, 0, 0, 32),
                 AutomaticSize = Enum.AutomaticSize.X,
                 BackgroundColor3 = FromRGB(12, 12, 12),
                 BorderColor3 = FromRGB(0, 0, 0),
@@ -4356,8 +4385,8 @@ local Library do
 
             Instances:Create("UIPadding", {
                 Parent = ToggleButton.Instance,
-                PaddingRight = UDimNew(0, 18), -- เพิ่ม Padding ขวาให้ปุ่มยาวขึ้น
-                PaddingLeft = UDimNew(0, 18)  -- เพิ่ม Padding ซ้ายให้ปุ่มยาวขึ้น
+                PaddingRight = UDimNew(0, 18),
+                PaddingLeft = UDimNew(0, 18)
             })
 
             local ToggleText = Instances:Create("TextLabel", {
@@ -4371,16 +4400,16 @@ local Library do
                 Size = UDim2New(0, 0, 1, 0),
                 BorderSizePixel = 0,
                 AutomaticSize = Enum.AutomaticSize.X,
-                TextSize = 10.5, -- ปรับขนาดตัวอักษรให้ใหญ่ขึ้น (จาก 13 เป็น 14)
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  ToggleText:AddToTheme({TextColor3 = "Text"})
 
             local ToggleLiner = Instances:Create("Frame", {
                 Parent = ToggleButton.Instance,
                 Name = "\0",
-                Position = UDim2New(0, -18, 0, 0), -- ปรับให้รับกับ Padding ซ้าย 18 พอดี (-18)
+                Position = UDim2New(0, -18, 0, 0),
                 BorderColor3 = FromRGB(0, 0, 0),
-                Size = UDim2New(1, 36, 0, 2), -- ปรับความกว้างครอบคลุมรวม Padding ซ้าย+ขวา (18 + 18 = 36) และความหนาเป็น 2
+                Size = UDim2New(1, 36, 0, 2),
                 BorderSizePixel = 0,
                 BackgroundColor3 = FromRGB(31, 226, 130)
             })  ToggleLiner:AddToTheme({BackgroundColor3 = "Accent"})
