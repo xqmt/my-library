@@ -5,13 +5,13 @@ local Window = Library:Window({
     GradientTitle = {
         Enabled = true,
         Start = Color3.fromRGB(255, 255, 255),
-        Middle = Color3.fromRGB(0, 251, 255),
-        End = Color3.fromRGB(50, 135, 168),
+        Middle = Color3.fromRGB(155, 181, 244),
+        End = Color3.fromRGB(155, 181, 244),
         Speed = 0.8
     }
 })
 
-local Watermark = Library:Watermark("Architects.hit", {"77974153657891", Color3.fromRGB(149, 255, 139)})
+local Watermark = Library:Watermark("Architects.hit", {"77974153657891", Color3.fromRGB(255, 255, 255)})
 local KeybindList = Library:KeybindList()
 
 --Watermark:SetVisibility(false)
