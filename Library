@@ -233,12 +233,6 @@ local Library do
         NotifHolder = nil,
         Font = nil,
         KeyList = nil,
-
-        -- 🔥 Glow Assets
-        GlowAssets = {
-            Circle = "rbxassetid://5028857472",   -- soft radial glow
-            Slice  = "rbxassetid://4996891970",   -- 9-slice soft blur
-        }
     }
 
     local Keys = {
@@ -665,7 +659,7 @@ local Library do
                 Text = Text,
                 TextTransparency = 1,
                 TextColor3 = FromRGB(255, 255, 255),
-                TextSize = 12,
+                TextSize = 10.5,
             })  TooltipText:AddToTheme({TextColor3 = "Text"})
 
             Instances:Create("UIPadding", {
@@ -727,11 +721,11 @@ local Library do
             end
         end
 
-        CustomFont:New("Windows-XP-Tahoma", 200, "Regular", {
-            Url = "https://github.com/sametexe001/luas/raw/refs/heads/main/fonts/windows-xp-tahoma.ttf"
-        })
+        CustomFont:New("Smallest-Pixel-7", 200, "Regular", {
+       Url = "https://raw.githubusercontent.com/viera1337/primordial/main/Smallest_Pixel_7.ttf"
+     })
 
-        Library.Font = CustomFont:Get("Windows-XP-Tahoma")
+      Library.Font = CustomFont:Get("Smallest-Pixel-7")
     end
 
     Library.Holder = Instances:Create("ScreenGui", {
@@ -776,6 +770,7 @@ local Library do
         return MathFloor(Number * Multiplier) / Multiplier
     end
 
+    -- [FIX #1] IsMouseOverFrame รองรับ Touch + เพิ่ม IsPositionOverFrame
     Library.IsMouseOverFrame = function(self, Frame)
         local AbsolutePosition = Frame.AbsolutePosition
         local AbsoluteSize = Frame.AbsoluteSize
@@ -1113,7 +1108,7 @@ local Library do
                 Size = UDim2New(0, 0, 1, 0),
                 BorderSizePixel = 0,
                 AutomaticSize = Enum.AutomaticSize.X,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
 
@@ -1230,7 +1225,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 BorderSizePixel = 0,
                 AutomaticSize = Enum.AutomaticSize.X,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["Title"]:AddToTheme({TextColor3 = "Text"})
 
@@ -1287,7 +1282,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 BorderSizePixel = 0,
                 AutomaticSize = Enum.AutomaticSize.X,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  NewKey:AddToTheme({TextColor3 = "Text"})
 
@@ -1353,7 +1348,7 @@ local Library do
                 Position = UDim2New(0, 0, 0, 4),
                 BorderSizePixel = 0,
                 AutomaticSize = Enum.AutomaticSize.X,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             }) 
 
@@ -1509,30 +1504,13 @@ local Library do
                     LineJoinMode = Enum.LineJoinMode.Miter
                 }):AddToTheme({Color = "Outline"})
 
-                -- 🔥 Top Bar Glow (อยู่หลัง Liner, ใช้ Image Slice 9-slice)
-                Items["LinerGlow"] = Instances:Create("ImageLabel", {
-                    Parent = Items["Inline"].Instance,
-                    BackgroundTransparency = 1,
-                    BorderSizePixel = 0,
-                    Image = Library.GlowAssets.Slice,
-                    ImageColor3 = FromRGB(31, 226, 130),
-                    ImageTransparency = 0.4,
-                    ScaleType = Enum.ScaleType.Slice,
-                    SliceCenter = Rect.new(20, 20, 235, 235),
-                    Name = "\0",
-                    Size = UDim2New(1, 0, 0, 14),
-                    Position = UDim2New(0, 0, 0, -6),
-                    ZIndex = 0,
-                })  Items["LinerGlow"]:AddToTheme({ImageColor3 = "Accent"})
-
                 Items["Liner"] = Instances:Create("Frame", {
                     Parent = Items["Inline"].Instance,
                     Name = "\0",
                     BorderColor3 = FromRGB(0, 0, 0),
                     Size = UDim2New(1, 0, 0, 2),
                     BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(31, 226, 130),
-                    ZIndex = 2,
+                    BackgroundColor3 = FromRGB(31, 226, 130)
                 })  Items["Liner"]:AddToTheme({BackgroundColor3 = "Accent"})
 
                 Instances:Create("UIGradient", {
@@ -1562,7 +1540,7 @@ local Library do
                     Name = "\0",
                     Size = UDim2New(0, 200, 1, -12),
                     BorderSizePixel = 0,
-                    TextSize = 12,
+                    TextSize = 10.5,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Inactive"]:AddToTheme({TextColor3 = "Text"})
 
@@ -1765,7 +1743,7 @@ local Library do
                     Position = UDim2New(0, 9, 0, 0),
                     BorderSizePixel = 0,
                     AutomaticSize = Enum.AutomaticSize.X,
-                    TextSize = 12,
+                    TextSize = 10.5,
                     BackgroundColor3 = FromRGB(19, 19, 19)
                 })  Items["Text"]:AddToTheme({TextColor3 = "Text", BackgroundColor3 = "Section Background"})
 
@@ -1816,28 +1794,13 @@ local Library do
                     Name = "\0",
                     Size = UDim2New(1, 0, 0, 15),
                     BorderSizePixel = 0,
-                    TextSize = 14,
+                    TextSize = 10.5,
                     BackgroundColor3 = FromRGB(172, 158, 158)
                 })
 
                 if Data.Tooltip then 
                     Items["Toggle"]:Tooltip(Data.Tooltip)
                 end
-
-                -- 🔥 Glow (อยู่หลัง Indicator, ซ่อนไว้ก่อน)
-                Items["IndicatorGlow"] = Instances:Create("ImageLabel", {
-                    Parent = Items["Toggle"].Instance,
-                    BackgroundTransparency = 1,
-                    BorderSizePixel = 0,
-                    Image = Library.GlowAssets.Circle,
-                    ImageColor3 = FromRGB(31, 226, 130),
-                    ImageTransparency = 1,
-                    AnchorPoint = Vector2New(0.5, 0.5),
-                    Name = "\0",
-                    Position = UDim2New(0, 5, 0.5, 0),
-                    Size = UDim2New(0, 26, 0, 26),
-                    ZIndex = 0,
-                })  Items["IndicatorGlow"]:AddToTheme({ImageColor3 = "Accent"})
 
                 Items["Indicator"] = Instances:Create("Frame", {
                     Parent = Items["Toggle"].Instance,
@@ -1847,7 +1810,6 @@ local Library do
                     BorderColor3 = FromRGB(0, 0, 0),
                     Size = UDim2New(0, 10, 0, 10),
                     BorderSizePixel = 0,
-                    ZIndex = 2,
                     BackgroundColor3 = FromRGB(63, 63, 63)
                 })  Items["Indicator"]:AddToTheme({BackgroundColor3 = "Element"})
 
@@ -1875,7 +1837,7 @@ local Library do
                     TextXAlignment = Enum.TextXAlignment.Left,
                     Position = UDim2New(0, 18, 0, -1),
                     BorderSizePixel = 0,
-                    TextSize = 12,
+                    TextSize = 10.5,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
 
@@ -1895,9 +1857,6 @@ local Library do
                     Items["Indicator"]:ChangeItemTheme({BackgroundColor3 = "Accent"})
                     Items["Indicator"]:Tween(nil, {BackgroundColor3 = Library.Theme.Accent})
 
-                    -- 🔥 Glow เปิด
-                    Items["IndicatorGlow"]:Tween(nil, {ImageTransparency = 0.25})
-
                     if not Data.Risky then 
                         Items["Text"]:ChangeItemTheme({TextColor3 = "Accent"})
                         Items["Text"]:Tween(nil, {TextColor3 = Library.Theme.Accent})
@@ -1905,9 +1864,6 @@ local Library do
                 else
                     Items["Indicator"]:ChangeItemTheme({BackgroundColor3 = "Element"})
                     Items["Indicator"]:Tween(nil, {BackgroundColor3 = Library.Theme.Element})
-
-                    -- 🔥 Glow ปิด
-                    Items["IndicatorGlow"]:Tween(nil, {ImageTransparency = 1})
 
                     if not Data.Risky then
                         Items["Text"]:ChangeItemTheme({TextColor3 = "Text"})
@@ -1958,7 +1914,7 @@ local Library do
                 Name = "\0",
                 Size = UDim2New(1, 0, 0, 17),
                 BorderSizePixel = 0,
-                TextSize = 14,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(63, 63, 63)
             })  Items["Button"]:AddToTheme({BackgroundColor3 = "Element"})
 
@@ -1990,7 +1946,7 @@ local Library do
                 Size = UDim2New(1, 0, 1, 0),
                 BorderSizePixel = 0,
                 TextWrapped = true,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
 
@@ -2060,7 +2016,7 @@ local Library do
                     Position = UDim2New(1, 0, 0, 0),
                     Size = UDim2New(0.475, 3, 0, 17),
                     BorderSizePixel = 0,
-                    TextSize = 14,
+                    TextSize = 10.5,
                     BackgroundColor3 = FromRGB(63, 63, 63)
                 })  SubItems["Button"]:AddToTheme({BackgroundColor3 = "Element"})
 
@@ -2092,7 +2048,7 @@ local Library do
                     Position = UDim2New(0, 0, 0, -1),
                     BorderSizePixel = 0,
                     TextWrapped = true,
-                    TextSize = 12,
+                    TextSize = 10.5,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  SubItems["Text"]:AddToTheme({TextColor3 = "Text"})
 
@@ -2179,7 +2135,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 Size = UDim2New(1, 0, 0, 13),
                 BorderSizePixel = 0,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
 
@@ -2208,30 +2164,12 @@ local Library do
                 LineJoinMode = Enum.LineJoinMode.Miter
             }):AddToTheme({Color = "Outline"})
 
-            -- 🔥 Glow (อยู่หลัง Indicator, ตำแหน่ง/ขนาดจะถูก tween ตามค่า slider)
-            Items["IndicatorGlow"] = Instances:Create("ImageLabel", {
-                Parent = Items["RealSlider"].Instance,
-                BackgroundTransparency = 1,
-                BorderSizePixel = 0,
-                Image = Library.GlowAssets.Slice,
-                ImageColor3 = FromRGB(31, 226, 130),
-                ImageTransparency = 0.35,
-                ScaleType = Enum.ScaleType.Slice,
-                SliceCenter = Rect.new(20, 20, 235, 235),
-                AnchorPoint = Vector2New(0.5, 0.5),
-                Name = "\0",
-                Position = UDim2New(0.5, 0, 0.5, 0),
-                Size = UDim2New(1, 8, 1, 8),
-                ZIndex = 0,
-            })  Items["IndicatorGlow"]:AddToTheme({ImageColor3 = "Accent"})
-
             Items["Indicator"] = Instances:Create("Frame", {
                 Parent = Items["RealSlider"].Instance,
                 Name = "\0",
                 BorderColor3 = FromRGB(0, 0, 0),
                 Size = UDim2New(0.23999999463558197, 0, 1, 0),
                 BorderSizePixel = 0,
-                ZIndex = 2,
                 BackgroundColor3 = FromRGB(31, 226, 130)
             })  Items["Indicator"]:AddToTheme({BackgroundColor3 = "Accent"})
 
@@ -2252,7 +2190,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Right,
                 Size = UDim2New(1, 0, 0, 13),
                 BorderSizePixel = 0,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["Value"]:AddToTheme({TextColor3 = "Text"})
         end
@@ -2262,16 +2200,7 @@ local Library do
 
             Library.Flags[Slider.Flag] = Slider.Value
 
-            local Ratio = (Slider.Value - Data.Min) / (Data.Max - Data.Min)
-
-            Items["Indicator"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2New(Ratio, 0, 1, 0)})
-
-            -- 🔥 Glow ยืด/หดตาม Ratio
-            Items["IndicatorGlow"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
-                Size = UDim2New(Ratio, 8, 1, 8),
-                Position = UDim2New(Ratio / 2, 0, 0.5, 0)
-            })
-
+            Items["Indicator"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2New((Slider.Value - Data.Min) / (Data.Max - Data.Min), 0, 1, 0)})
             Items["Value"].Instance.Text = StringFormat("%s%s", tostring(Slider.Value), Data.Suffix)
 
             if Data.Callback then 
@@ -2291,9 +2220,6 @@ local Library do
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then 
                 Slider.Sliding = true
 
-                -- 🔥 สว่างขึ้นตอนลาก
-                Items["IndicatorGlow"]:Tween(nil, {ImageTransparency = 0.1})
-
                 local SizeX = (Mouse.X - Items["RealSlider"].Instance.AbsolutePosition.X) / Items["RealSlider"].Instance.AbsoluteSize.X
                 local Value = ((Data.Max - Data.Min) * SizeX) + Data.Min
 
@@ -2302,8 +2228,6 @@ local Library do
                 Input.Changed:Connect(function()
                     if Input.UserInputState == Enum.UserInputState.End then
                         Slider.Sliding = false
-                        -- 🔥 กลับสู่ปกติ
-                        Items["IndicatorGlow"]:Tween(nil, {ImageTransparency = 0.35})
                     end
                 end)
             end
@@ -2368,7 +2292,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 Size = UDim2New(1, 0, 1, 0),
                 BorderSizePixel = 0,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
 
@@ -2410,7 +2334,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 BorderSizePixel = 0,
                 TextTruncate = Enum.TextTruncate.AtEnd,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["Value"]:AddToTheme({TextColor3 = "Text"})
 
@@ -2594,7 +2518,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 BorderSizePixel = 0,
                 TextTruncate = Enum.TextTruncate.AtEnd,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  OptionButton:AddToTheme({TextColor3 = "Text"})
 
@@ -2686,6 +2610,8 @@ local Library do
             return Dropdown.Value
         end
 
+        -- [FIX] ปิด Dropdown เมื่อคลิกข้างนอก — ใช้ Input.Position แทน GetMouseLocation
+        -- เพราะ ScreenGui ตั้ง IgnoreGuiInset = true ทำให้ตำแหน่งคลาดกัน 36px
         Library:Connect(UserInputService.InputBegan, function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 if Debounce then 
@@ -2762,7 +2688,7 @@ local Library do
                 Position = UDim2New(1, 0, 0.5, 0),
                 Size = UDim2New(0, 25, 0, 12),
                 BorderSizePixel = 0,
-                TextSize = 14,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(31, 226, 130)
             }) 
 
@@ -2901,7 +2827,7 @@ local Library do
                 Position = UDim2New(0.05, 2, 0.07, -2),
                 Size = UDim2New(0.9, -4, 0.67, 0),
                 BorderSizePixel = 0,
-                TextSize = 14,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(31, 226, 130)
             }) 
 
@@ -2959,7 +2885,7 @@ local Library do
                 Position = UDim2New(0.05, 2, 1, -22),
                 Size = UDim2New(0.9, -4, 0.1, -3),
                 BorderSizePixel = 0,
-                TextSize = 14,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(31, 226, 130)
             }) 
 
@@ -3146,7 +3072,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 RichText = true,
                 FontFace = Library.Font,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["RGB"]:AddToTheme({TextColor3 = "Text"})
 
@@ -3164,7 +3090,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 RichText = true,
                 FontFace = Library.Font,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["HSV"]:AddToTheme({TextColor3 = "Text"})
 
@@ -3182,7 +3108,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 RichText = true,
                 FontFace = Library.Font,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["Hex"]:AddToTheme({TextColor3 = "Text"})
 
@@ -3426,6 +3352,7 @@ local Library do
             Colorpicker:SetOpen(not Colorpicker.IsOpen)
         end)
 
+        -- [FIX #10] Close Colorpicker รองรับ Touch + ใช้ IsPositionOverFrame
         Library:Connect(UserInputService.InputBegan, function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 if Debounce then 
@@ -3444,6 +3371,7 @@ local Library do
             end
         end)
 
+        -- [FIX #3] Palette InputBegan รองรับ Touch
         Items["Palette"]:Connect("InputBegan", function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 SlidingPalette = true
@@ -3451,12 +3379,14 @@ local Library do
             end
         end)
 
+        -- [FIX #4] Palette InputEnded รองรับ Touch
         Items["Palette"]:Connect("InputEnded", function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 SlidingPalette = false
             end
         end)
 
+        -- [FIX #5] Hue InputBegan รองรับ Touch
         Items["Hue"]:Connect("InputBegan", function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 SlidingHue = true
@@ -3464,12 +3394,14 @@ local Library do
             end
         end)
 
+        -- [FIX #6] Hue InputEnded รองรับ Touch
         Items["Hue"]:Connect("InputEnded", function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 SlidingHue = false
             end
         end)
 
+        -- [FIX #7] Alpha InputBegan รองรับ Touch
         Items["Alpha"]:Connect("InputBegan", function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 SlidingAlpha = true
@@ -3477,12 +3409,14 @@ local Library do
             end
         end)
 
+        -- [FIX #8] Alpha InputEnded รองรับ Touch
         Items["Alpha"]:Connect("InputEnded", function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 SlidingAlpha = false
             end
         end)
 
+        -- [FIX #9] InputChanged รองรับ Touch
         Library:Connect(UserInputService.InputChanged, function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then
                 if SlidingPalette then
@@ -3534,7 +3468,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment[Data.Alignment],
                 BorderSizePixel = 0,
                 RichText = true,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
         end
@@ -3575,7 +3509,7 @@ local Library do
                 BackgroundTransparency = 1,
                 Position = UDim2New(1, 0, 0, 0),
                 BorderSizePixel = 0,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["KeyButton"]:AddToTheme({TextColor3 = "Text"})
 
@@ -3614,7 +3548,7 @@ local Library do
                 Position = UDim2New(0, 0, 0, 8),
                 BorderSizePixel = 0,
                 FontFace = Library.Font,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(31, 226, 130)
             })  Items["Toggle"]:AddToTheme({TextColor3 = "Text"})
 
@@ -3631,7 +3565,7 @@ local Library do
                 Position = UDim2New(0, 0, 0, 30),
                 BorderSizePixel = 0,
                 FontFace = Library.Font,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(31, 226, 130)
             })  Items["Hold"]:AddToTheme({TextColor3 = "Text"})
 
@@ -3648,7 +3582,7 @@ local Library do
                 Position = UDim2New(0, 0, 0, 52),
                 BorderSizePixel = 0,
                 FontFace = Library.Font,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(31, 226, 130)
             })  Items["Always"]:AddToTheme({TextColor3 = "Text"})
         end
@@ -3851,6 +3785,7 @@ local Library do
             Keybind:SetOpen(not Keybind.IsOpen)
         end)
 
+        -- [FIX] Keybind ปิดเมื่อคลิกข้างนอก — ใช้ IsPositionOverFrame แทน IsMouseOverFrame
         Library:Connect(UserInputService.InputBegan, function(Input)
             if tostring(Input.KeyCode) == Keybind.Key or tostring(Input.UserInputType) == Keybind.Key then
                 if Keybind.Mode == "Toggle" then 
@@ -3869,7 +3804,7 @@ local Library do
             end
 
             if Library:IsPositionOverFrame(Items["KeybindWindow"]["Outline"].Instance, Input.Position) then 
-                return
+                return 
             end
 
             Keybind:SetOpen(false)
@@ -3942,7 +3877,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 Size = UDim2New(1, 0, 0, 13),
                 BorderSizePixel = 0,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
 
@@ -3984,7 +3919,7 @@ local Library do
                 PlaceholderColor3 = FromRGB(145, 145, 145),
                 PlaceholderText = Data.Placeholder,
                 ClearTextOnFocus = false,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["Inline"]:AddToTheme({TextColor3 = "Text"})
 
@@ -4165,7 +4100,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Center,
                 BorderSizePixel = 0,
                 TextTruncate = Enum.TextTruncate.AtEnd,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  OptionButton:AddToTheme({TextColor3 = "Text"})
 
@@ -4313,7 +4248,7 @@ local Library do
                 Position = UDim2New(0, 0, 0, -1),
                 BorderSizePixel = 0,
                 RichText = true,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             }) 
 
@@ -4393,7 +4328,7 @@ local Library do
             }):AddToTheme({Color = "Border"})
         end
 
-        -- Mobile Floating Toggle Button
+        -- [FIX #11] Mobile Floating Toggle Button (Watermark style)
         local IsMobile = UserInputService.TouchEnabled and not UserInputService.MouseEnabled
 
         if IsMobile then
@@ -4401,15 +4336,15 @@ local Library do
                 Parent = self.Holder.Instance,
                 Name = "\0",
                 AnchorPoint = Vector2New(0, 0),
-                Position = UDim2New(0, 15, 0, 75),
-                Size = UDim2New(0, 0, 0, 30),
+                Position = UDim2New(0, 15, 0, 75), -- ปรับตำแหน่ง Y จาก 10 เป็น 75 เพื่อหลบปุ่ม Roblox ด้านบน
+                Size = UDim2New(0, 0, 0, 32), -- ปรับความสูงจาก 28 เป็น 36 ให้ใหญ่ขึ้นตามโจทย์
                 AutomaticSize = Enum.AutomaticSize.X,
                 BackgroundColor3 = FromRGB(12, 12, 12),
                 BorderColor3 = FromRGB(0, 0, 0),
                 BorderSizePixel = 2,
                 Text = "",
                 AutoButtonColor = false,
-                TextSize = 14,
+                TextSize = 10.5,
             })  ToggleButton:AddToTheme({BackgroundColor3 = "Inline", BorderColor3 = "Outline"})
 
             Instances:Create("UIStroke", {
@@ -4421,8 +4356,8 @@ local Library do
 
             Instances:Create("UIPadding", {
                 Parent = ToggleButton.Instance,
-                PaddingRight = UDimNew(0, 18),
-                PaddingLeft = UDimNew(0, 18)
+                PaddingRight = UDimNew(0, 18), -- เพิ่ม Padding ขวาให้ปุ่มยาวขึ้น
+                PaddingLeft = UDimNew(0, 18)  -- เพิ่ม Padding ซ้ายให้ปุ่มยาวขึ้น
             })
 
             local ToggleText = Instances:Create("TextLabel", {
@@ -4430,22 +4365,22 @@ local Library do
                 FontFace = Library.Font,
                 TextColor3 = FromRGB(180, 180, 180),
                 BorderColor3 = FromRGB(0, 0, 0),
-                Text = "Toggle UI",
+                Text = "Toggle ui",
                 Name = "\0",
                 BackgroundTransparency = 1,
                 Size = UDim2New(0, 0, 1, 0),
                 BorderSizePixel = 0,
                 AutomaticSize = Enum.AutomaticSize.X,
-                TextSize = 13,
+                TextSize = 10.5, -- ปรับขนาดตัวอักษรให้ใหญ่ขึ้น (จาก 13 เป็น 14)
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  ToggleText:AddToTheme({TextColor3 = "Text"})
 
             local ToggleLiner = Instances:Create("Frame", {
                 Parent = ToggleButton.Instance,
                 Name = "\0",
-                Position = UDim2New(0, -18, 0, 0),
+                Position = UDim2New(0, -18, 0, 0), -- ปรับให้รับกับ Padding ซ้าย 18 พอดี (-18)
                 BorderColor3 = FromRGB(0, 0, 0),
-                Size = UDim2New(1, 36, 0, 2),
+                Size = UDim2New(1, 36, 0, 2), -- ปรับความกว้างครอบคลุมรวม Padding ซ้าย+ขวา (18 + 18 = 36) และความหนาเป็น 2
                 BorderSizePixel = 0,
                 BackgroundColor3 = FromRGB(31, 226, 130)
             })  ToggleLiner:AddToTheme({BackgroundColor3 = "Accent"})
@@ -4640,7 +4575,7 @@ local Library do
                 Position = UDim2New(0, 9, 0, 0),
                 BorderSizePixel = 0,
                 AutomaticSize = Enum.AutomaticSize.X,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(19, 19, 19)
             })  Items["Text"]:AddToTheme({TextColor3 = "Text", BackgroundColor3 = "Section Background"})
 
@@ -4715,7 +4650,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 Position = UDim2New(0, 88, 1, -68),
                 BorderSizePixel = 0,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["Username"]:AddToTheme({TextColor3 = "Text"})
 
@@ -4732,7 +4667,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 Position = UDim2New(0, 88, 1, -53),
                 BorderSizePixel = 0,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  Items["UserID"]:AddToTheme({TextColor3 = "Text"})
             
@@ -4806,7 +4741,7 @@ local Library do
                 Name = "\0",
                 Size = UDim2New(1, 0, 0, 20),
                 BorderSizePixel = 0,
-                TextSize = 14,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  
 
@@ -4834,7 +4769,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 BorderSizePixel = 0,
                 TextTruncate = Enum.TextTruncate.AtEnd,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  PlayerName:AddToTheme({TextColor3 = "Text"})
 
@@ -4862,7 +4797,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 BorderSizePixel = 0,
                 TextTruncate = Enum.TextTruncate.AtEnd,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  
 
@@ -4895,7 +4830,7 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 BorderSizePixel = 0,
                 TextTruncate = Enum.TextTruncate.AtEnd,
-                TextSize = 12,
+                TextSize = 10.5,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })  
 
