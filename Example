@@ -24,9 +24,9 @@ local function MakeResizeable(target, minSize, maxSize)
     handle.AutoButtonColor = false
     handle.BackgroundTransparency = 1
     handle.BorderSizePixel = 0
-    handle.Size = UDim2.new(0, 18, 0, 18) -- ปรับขนาดให้พอดีและแม่นยำขึ้น
-    handle.AnchorPoint = Vector2.new(1, 1)   -- ยึดมุมขวาล่าง
-    handle.Position = UDim2.new(1, 0, 1, 0)  -- ชิดมุมขวาล่างพอดีเป๊ะ
+    handle.Size = UDim2.new(0, 18, 0, 18) 
+    handle.AnchorPoint = Vector2.new(1, 1)  
+    handle.Position = UDim2.new(1, 0, 1, 0) 
     handle.ZIndex = 9999
     handle.Parent = Outline
     
