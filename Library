@@ -330,12 +330,12 @@ local Library do
         ["Default"] = {
             ["Window Background"] = FromRGB(5, 5, 5),
             ["Inline"] = FromRGB(8, 8, 8),
-            ["Text"] = FromRGB(255, 255, 255),
+            ["Text"] = FromRGB(214, 211, 211),
             ["Section Background"] = FromRGB(4, 4, 4),
             ["Element"] = FromRGB(6, 6, 6),
             ["Border"] = FromRGB(5, 5, 5),
             ["Outline"] = FromRGB(0, 0, 0),
-            ["Dark Liner"] = FromRGB(8, 8, 8),
+            ["Dark Liner"] = FromRGB(91, 104, 142),
             ["Risky"] = FromRGB(255, 50, 50),
             ["Accent"] = FromRGB(155, 181, 244)
         },
