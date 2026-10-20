@@ -6,7 +6,7 @@ pcall(function() delfile("testpath/Assets/Smallest-Pixel-7.ttf") end)
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xqmt/my-library/refs/heads/main/Library"))()
 
 local Window = Library:Window({
-    Name = "ARCHITECTS",
+    Name = "U T O P I A",
     GradientTitle = {
         Enabled = true,
         Start = Color3.fromRGB(255, 255, 255),
@@ -29,7 +29,7 @@ local PlayersTab = Window:Page({Name = "Players", Columns = 1  })
 local SettingsTab = Window:Page({Name = "Settings", Columns = 2 })
 
 local AimbotSection = CombatTab:Section({Name = "Aimbot", Side = 1 })
-CombatTab:Section({Name = "NIGGERRSDSSSSSSSSSS", Side = 2 })
+CombatTab:Section({Name = "Hello", Side = 2 })
 
 PlayersTab:PlayerList({
     Name = "Playerlist", 
