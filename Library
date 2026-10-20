@@ -333,7 +333,7 @@ local Library do
             ["Text"] = FromRGB(214, 211, 211),
             ["Section Background"] = FromRGB(4, 4, 4),
             ["Element"] = FromRGB(6, 6, 6),
-            ["Border"] = FromRGB(5, 5, 5),
+            ["Border"] = FromRGB(18, 18, 18),
             ["Outline"] = FromRGB(0, 0, 0),
             ["Dark Liner"] = FromRGB(91, 104, 142),
             ["Risky"] = FromRGB(255, 50, 50),
