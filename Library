@@ -199,13 +199,14 @@ local Library do
             Themes = "testpath/Themes"
         },
 
-        Images = {
+        Images = { -- you're welcome to reupload the images and replace it with your own links
             ["Saturation"] = {"Saturation.png", "https://github.com/sametexe001/images/blob/main/saturation.png?raw=true" },
             ["Value"] = { "Value.png", "https://github.com/sametexe001/images/blob/main/value.png?raw=true" },
             ["Hue"] = { "Hue.png", "https://github.com/sametexe001/images/blob/main/horizontalhue.png?raw=true" },
             ["Checkers"] = { "Checkers.png", "https://github.com/sametexe001/images/blob/main/checkers.png?raw=true" },
         },
 
+        -- Ignore below
         Pages = { },
         Sections = { },
 
@@ -327,16 +328,16 @@ local Library do
 
     local Themes = {
         ["Default"] = {
-            ["Window Background"] = FromRGB(5, 5, 5),
-            ["Inline"] = FromRGB(8, 8, 8),
-            ["Text"] = FromRGB(214, 211, 211),
-            ["Section Background"] = FromRGB(4, 4, 4),
-            ["Element"] = FromRGB(6, 6, 6),
-            ["Border"] = FromRGB(18, 18, 18),
+            ["Window Background"] = FromRGB(43, 43, 43),
+            ["Inline"] = FromRGB(12, 12, 12),
+            ["Text"] = FromRGB(180, 180, 180),
+            ["Section Background"] = FromRGB(19, 19, 19),
+            ["Element"] = FromRGB(63, 63, 63),
+            ["Border"] = FromRGB(68, 68, 68),
             ["Outline"] = FromRGB(0, 0, 0),
-            ["Dark Liner"] = FromRGB(91, 104, 142),
+            ["Dark Liner"] = FromRGB(56, 56, 56),
             ["Risky"] = FromRGB(255, 50, 50),
-            ["Accent"] = FromRGB(155, 181, 244)
+            ["Accent"] = FromRGB(31, 226, 130)
         },
 
         ["Bitchbot"] = {
@@ -510,9 +511,6 @@ local Library do
             self = nil
         end
 
-        -- ============================================================
-        -- [FIX] MakeDraggable - ล็อคตอน resize + ป้องกันชน resize handle
-        -- ============================================================
         Instances.MakeDraggable = function(self)
             if not self.Instance then 
                 return
@@ -531,20 +529,6 @@ local Library do
 
             self:Connect("InputBegan", function(Input)
                 if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
-                    -- [FIX] ถ้ากำลัง resize อยู่ ห้ามลาก
-                    if Gui:GetAttribute("IsResizing") then return end
-
-                    -- [FIX] ถ้าคลิกโดน resize handle (มุมขวาล่าง 22x22) ห้ามลาก
-                    if Gui:GetAttribute("HasResizeHandle") then
-                        local AbsPos  = Gui.AbsolutePosition
-                        local AbsSize = Gui.AbsoluteSize
-                        local P = Input.Position
-                        if P.X >= AbsPos.X + AbsSize.X - 22
-                            and P.Y >= AbsPos.Y + AbsSize.Y - 22 then
-                            return
-                        end
-                    end
-
                     Dragging = true
 
                     DragStart = Input.Position
@@ -569,144 +553,55 @@ local Library do
             return Dragging
         end
 
-        -- ============================================================
-        -- [FIX] MakeResizeable - Handle ใหญ่ขึ้น / ขอบขาว / ลื่นไหล / คำนวณตอนปล่อย
-        -- ============================================================
         Instances.MakeResizeable = function(self, Minimum, Maximum)
             if not self.Instance then 
                 return
             end
 
             local Gui = self.Instance
-            Minimum = Minimum or UDim2New(0, 200, 0, 150)
 
             local Resizing = false 
-            local StartSize = Vector2.new(0, 0)
-            local StartInput = Vector2.new(0, 0)
+            local Start = UDim2New()
+            local Delta = UDim2New()
+            local ResizeMax = Gui.Parent.AbsoluteSize - Gui.AbsoluteSize
 
-            -- บอก MakeDraggable ว่ารองรับ resize (ใช้เช็คกันชน)
-            Gui:SetAttribute("HasResizeHandle", true)
-
-            -- White border ที่โผล่มาตอน resize
-            local ResizeOutline = Instances:Create("Frame", {
-                Parent = Gui,
-                Name = "\0",
-                Size = UDim2New(1, 0, 1, 0),
-                Position = UDim2New(0, 0, 0, 0),
-                BackgroundTransparency = 1,
-                BorderSizePixel = 0,
-                Visible = false,
-                ZIndex = 1000,
-            })
-
-            Instances:Create("UIStroke", {
-                Parent = ResizeOutline.Instance,
-                Color = FromRGB(255, 255, 255),
-                Thickness = 2,
-                ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-                LineJoinMode = Enum.LineJoinMode.Miter,
-            })
-
-            -- Resize handle ขยายสำหรับ Touch
             local ResizeButton = Instances:Create("TextButton", {
-                Parent = Gui,
-                AnchorPoint = Vector2New(1, 1),
-                BorderColor3 = FromRGB(0, 0, 0),
-                Size = UDim2New(0, 22, 0, 22),
-                Position = UDim2New(1, 0, 1, 0),
+				Parent = Gui,
+				AnchorPoint = Vector2New(1, 1),
+				BorderColor3 = FromRGB(0, 0, 0),
+				Size = UDim2New(0, 8, 0, 8),
+				Position = UDim2New(1, 0, 1, 0),
                 Name = "\0",
-                BorderSizePixel = 0,
-                BackgroundTransparency = 1,
-                AutoButtonColor = false,
+				BorderSizePixel = 0,
+				BackgroundTransparency = 1,
+				AutoButtonColor = false,
                 Visible = true,
-                Text = "",
-                ZIndex = 1001,
-            })
-
-            -- Grip สองขีดทำมุม
-            Instances:Create("Frame", {
-                Parent = ResizeButton.Instance,
-                AnchorPoint = Vector2New(1, 1),
-                Position = UDim2New(1, -5, 1, -5),
-                Size = UDim2New(0, 9, 0, 2),
-                Rotation = -45,
-                BackgroundColor3 = FromRGB(210, 210, 210),
-                BackgroundTransparency = 0.2,
-                BorderSizePixel = 0,
-            })
-
-            Instances:Create("Frame", {
-                Parent = ResizeButton.Instance,
-                AnchorPoint = Vector2New(1, 1),
-                Position = UDim2New(1, -5, 1, -5),
-                Size = UDim2New(0, 2, 0, 9),
-                Rotation = -45,
-                BackgroundColor3 = FromRGB(210, 210, 210),
-                BackgroundTransparency = 0.2,
-                BorderSizePixel = 0,
-            })
-
-            local GetMaxSize = function()
-                local MaxX = math.huge
-                local MaxY = math.huge
-
-                if Maximum then
-                    MaxX = Maximum.X.Offset > 0 and Maximum.X.Offset
-                        or (Maximum.X.Scale > 0 and Maximum.X.Scale * Gui.AbsoluteSize.X or MaxX)
-                    MaxY = Maximum.Y.Offset > 0 and Maximum.Y.Offset
-                        or (Maximum.Y.Scale > 0 and Maximum.Y.Scale * Gui.AbsoluteSize.Y or MaxY)
-                elseif Gui.Parent then
-                    MaxX = Gui.Parent.AbsoluteSize.X
-                    MaxY = Gui.Parent.AbsoluteSize.Y
-                end
-                return MaxX, MaxY
-            end
-
-            local ApplySize = function(NewX, NewY)
-                local MaxX, MaxY = GetMaxSize()
-                local MinX = Minimum.X.Offset > 0 and Minimum.X.Offset or 200
-                local MinY = Minimum.Y.Offset > 0 and Minimum.Y.Offset or 150
-
-                Gui.Size = UDim2New(0,
-                    math.clamp(NewX, MinX, MaxX),
-                    0,
-                    math.clamp(NewY, MinY, MaxY)
-                )
-            end
+                Text = ""
+			})
 
             ResizeButton:Connect("InputBegan", function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseButton1
-                    or Input.UserInputType == Enum.UserInputType.Touch then
-
+                if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                     Resizing = true
-                    Gui:SetAttribute("IsResizing", true)
-                    ResizeOutline.Instance.Visible = true
 
-                    StartSize = Gui.AbsoluteSize
-                    StartInput = Input.Position
+                    Start = Gui.Size - UDim2New(0, Input.Position.X, 0, Input.Position.Y)
+                end
+            end)
 
-                    Input.Changed:Connect(function()
-                        if Input.UserInputState == Enum.UserInputState.End then
-                            Resizing = false
-                            Gui:SetAttribute("IsResizing", false)
-                            ResizeOutline.Instance.Visible = false
-
-                            -- คำนวณ/ล็อคขนาดสุดท้ายตอนปล่อย
-                            ApplySize(Gui.AbsoluteSize.X, Gui.AbsoluteSize.Y)
-                        end
-                    end)
+            ResizeButton:Connect("InputEnded", function(Input)
+                if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+                    Resizing = false
                 end
             end)
 
             Library:Connect(UserInputService.InputChanged, function(Input)
-                if not Resizing then return end
-                if Input.UserInputType ~= Enum.UserInputType.MouseMovement
-                    and Input.UserInputType ~= Enum.UserInputType.Touch then
-                    return
-                end
+                if (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) and Resizing then
+					ResizeMax = Maximum or Gui.Parent.AbsoluteSize - Gui.AbsoluteSize
 
-                local Delta = Input.Position - StartInput
-                ApplySize(StartSize.X + Delta.X, StartSize.Y + Delta.Y)
+					Delta = Start + UDim2New(0, Input.Position.X, 0, Input.Position.Y)
+					Delta = UDim2New(0, math.clamp(Delta.X.Offset, Minimum.X, ResizeMax.X), 0, math.clamp(Delta.Y.Offset, Minimum.Y, ResizeMax.Y))
+
+					Tween:Create(Gui, TweenInfo.new(0.17, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = Delta}, true)
+                end
             end)
 
             return Resizing
@@ -796,11 +691,15 @@ local Library do
         end
     end
 
+    -- ============================================================
+    -- [FIX] CustomFont - แก้ให้ Smallest Pixel ขึ้น
+    -- ============================================================
     local CustomFont = { } do
         function CustomFont:New(Name, Weight, Style, Data)
             local JsonPath = Library.Folders.Assets .. "/" .. Name .. ".json"
             local TtfPath  = Library.Folders.Assets .. "/" .. Name .. ".ttf"
 
+            -- ตรวจสอบ cache เดิม ถ้าโหลดพังให้ลบทิ้ง
             if isfile(JsonPath) and isfile(TtfPath) then
                 local ok, result = pcall(function()
                     return Font.new(getcustomasset(JsonPath))
@@ -812,6 +711,7 @@ local Library do
                 pcall(function() delfile(TtfPath) end)
             end
 
+            -- ดาวน์โหลด TTF ถ้ายังไม่มี
             if not isfile(TtfPath) then
                 local ok, contents = pcall(function()
                     return game:HttpGet(Data.Url)
@@ -823,6 +723,7 @@ local Library do
                 writefile(TtfPath, contents)
             end
 
+            -- สร้าง JSON ให้ถูก format (style = "normal", weight = 400)
             local FontData = {
                 name = Name,
                 faces = {
@@ -856,6 +757,7 @@ local Library do
         end
     end
 
+    -- โหลดฟอนต์พร้อม fallback (สำคัญ: ต้องไม่ปล่อยให้ Library.Font เป็น nil)
     local LoadedFont = CustomFont:New("Smallest-Pixel-7", 400, "normal", {
         Url = "https://raw.githubusercontent.com/viera1337/primordial/main/Smallest_Pixel_7.ttf"
     })
@@ -866,6 +768,7 @@ local Library do
         Library.Font = Font.fromEnum(Enum.Font.Code)
         warn("[Library] Falling back to Enum.Font.Code (Smallest-Pixel-7 failed)")
     end
+    -- ============================================================
 
     Library.Holder = Instances:Create("ScreenGui", {
         Parent = gethui(),
