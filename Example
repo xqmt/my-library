@@ -1,10 +1,92 @@
 -- safe load font
-
 pcall(function() delfile("testpath/Assets/Smallest-Pixel-7.json") end)
 pcall(function() delfile("testpath/Assets/Smallest-Pixel-7.ttf") end)
 
+-- load library
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xqmt/my-library/refs/heads/main/Library"))()
 
+-- resizeable ( u can delete it )
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+local function MakeResizeable(target, minSize, maxSize)
+    local Outline = target.Instance or target
+    if not Outline then return end
+
+    local minX = (minSize and minSize.X.Offset) or 400
+    local minY = (minSize and minSize.Y.Offset) or 350
+    local maxX = (maxSize and maxSize.X.Offset) or math.huge
+    local maxY = (maxSize and maxSize.Y.Offset) or math.huge
+    
+    local handle = Instance.new("TextButton")
+    handle.Name = "\0"
+    handle.Text = ""
+    handle.AutoButtonColor = false
+    handle.BackgroundTransparency = 1
+    handle.BorderSizePixel = 0
+    handle.Size = UDim2.new(0, 18, 0, 18) -- ปรับขนาดให้พอดีและแม่นยำขึ้น
+    handle.AnchorPoint = Vector2.new(1, 1)   -- ยึดมุมขวาล่าง
+    handle.Position = UDim2.new(1, 0, 1, 0)  -- ชิดมุมขวาล่างพอดีเป๊ะ
+    handle.ZIndex = 9999
+    handle.Parent = Outline
+    
+    RunService.RenderStepped:Connect(function()
+        if handle.Visible ~= Outline.Visible then
+            handle.Visible = Outline.Visible
+        end
+    end)
+    
+    local resizing = false
+    local startSize, startInput, origPosition, origActive
+
+    local function applySize(newX, newY)
+        Outline.Size = UDim2.new(0,
+            math.clamp(newX, minX, maxX),
+            0,
+            math.clamp(newY, minY, maxY)
+        )
+    end
+
+    handle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
+            resizing = true
+            startSize = Outline.AbsoluteSize
+            startInput = input.Position
+            origPosition = Outline.Position
+            origActive = Outline.Active
+            
+            Outline.Active = false
+            pcall(function() Outline.Interactable = false end)
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    resizing = false
+                    Outline.Active = origActive
+                    pcall(function() Outline.Interactable = true end)
+
+                    -- คำนวณ/ล็อคขนาดสุดท้ายตอนปล่อย
+                    applySize(Outline.AbsoluteSize.X, Outline.AbsoluteSize.Y)
+                end
+            end)
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if not resizing then return end
+        if input.UserInputType ~= Enum.UserInputType.MouseMovement
+        and input.UserInputType ~= Enum.UserInputType.Touch then return end
+
+        local delta = input.Position - startInput
+        applySize(startSize.X + delta.X, startSize.Y + delta.Y)
+        
+        if Outline.Position ~= origPosition then
+            Outline.Position = origPosition
+        end
+    end)
+end
+
+-- window
 local Window = Library:Window({
     Name = "U T O P I A",
     GradientTitle = {
@@ -15,6 +97,8 @@ local Window = Library:Window({
         Speed = 0.8
     }
 })
+
+MakeResizeable(Window.Items["Outline"], UDim2.new(0, 400, 0, 350), UDim2.new(0, 1400, 0, 1000))
 
 local Watermark = Library:Watermark("Architects.hit", {"77974153657891", Color3.fromRGB(255, 255, 255)})
 local KeybindList = Library:KeybindList()
