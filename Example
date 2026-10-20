@@ -1,3 +1,8 @@
+-- safe load font
+
+pcall(function() delfile("testpath/Assets/Smallest-Pixel-7.json") end)
+pcall(function() delfile("testpath/Assets/Smallest-Pixel-7.ttf") end)
+
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xqmt/my-library/refs/heads/main/Library"))()
 
 local Window = Library:Window({
