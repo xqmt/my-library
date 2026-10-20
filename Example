@@ -3,11 +3,11 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xqmt/
 local Window = Library:Window({
     Name = "ARCHITECTS",
     GradientTitle = {
-        Enabled = false,
+        Enabled = true,
         Start = Color3.fromRGB(255, 255, 255),
         Middle = Color3.fromRGB(0, 251, 255),
         End = Color3.fromRGB(50, 135, 168),
-        Speed = 1
+        Speed = 0.8
     }
 })
 
