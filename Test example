@@ -3,7 +3,7 @@ pcall(function() delfile("testpath/Assets/Smallest-Pixel-7.json") end)
 pcall(function() delfile("testpath/Assets/Smallest-Pixel-7.ttf") end)
 
 -- load library
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xqmt/my-library/refs/heads/main/Library"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xqmt/my-library/refs/heads/main/Test%20library"))()
 
 -- resizeable ( u can delete it )
 local UserInputService = game:GetService("UserInputService")
