@@ -1130,6 +1130,21 @@ local Library do
                 BackgroundColor3 = FromRGB(12, 12, 12)
             })  Items["Watermark"]:AddToTheme({BackgroundColor3 = "Inline", BorderColor3 = "Outline"})
 
+            -- [GLOW] Watermark glow (around watermark, tinted by Accent)
+            Items["Glow"] = Instances:Create("ImageLabel", {
+                Parent = Items["Watermark"].Instance,
+                Name = "\0",
+                Image = "rbxassetid://129224956712931",
+                BackgroundTransparency = 1,
+                AnchorPoint = Vector2New(0.5, 0.5),
+                Position = UDim2New(0.5, 0, 0.5, 0),
+                Size = UDim2New(1, 20, 1, 20),
+                ImageTransparency = 0.35,
+                ZIndex = 0,
+                BorderSizePixel = 0,
+                BackgroundColor3 = FromRGB(255, 255, 255)
+            })  Items["Glow"]:AddToTheme({ImageColor3 = "Accent"})
+
             Items["Watermark"]:MakeDraggable()
 
             Instances:Create("UIStroke", {
@@ -1530,6 +1545,23 @@ local Library do
                     ApplyStrokeMode = Enum.ApplyStrokeMode.Border
                 }):AddToTheme({Color = "Border"})
 
+                -- [GLOW] Window / UI glow (around main outline, tinted by Accent)
+                if Data.Glow then
+                    Items["Glow"] = Instances:Create("ImageLabel", {
+                        Parent = Items["Outline"].Instance,
+                        Name = "\0",
+                        Image = "rbxassetid://129224956712931",
+                        BackgroundTransparency = 1,
+                        AnchorPoint = Vector2New(0.5, 0.5),
+                        Position = UDim2New(0.5, 0, 0.5, 0),
+                        Size = UDim2New(1, 40, 1, 40),
+                        ImageTransparency = 0.4,
+                        ZIndex = 0,
+                        BorderSizePixel = 0,
+                        BackgroundColor3 = FromRGB(255, 255, 255)
+                    })  Items["Glow"]:AddToTheme({ImageColor3 = "Accent"})
+                end
+
                 Items["Inline"] = Instances:Create("Frame", {
                     Parent = Items["Outline"].Instance,
                     Name = "\0",
@@ -1867,6 +1899,21 @@ local Library do
                     Color = RGBSequence{RGBSequenceKeypoint(0, FromRGB(255, 255, 255)), RGBSequenceKeypoint(1, FromRGB(127, 127, 127))}
                 }) 
 
+                -- [GLOW] Toggle indicator glow (hidden by default, shown when toggled on)
+                Items["Glow"] = Instances:Create("ImageLabel", {
+                    Parent = Items["Indicator"].Instance,
+                    Name = "\0",
+                    Image = "rbxassetid://129224956712931",
+                    BackgroundTransparency = 1,
+                    AnchorPoint = Vector2New(0.5, 0.5),
+                    Position = UDim2New(0.5, 0, 0.5, 0),
+                    Size = UDim2New(1, 10, 1, 10),
+                    ImageTransparency = 1,
+                    ZIndex = 0,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["Glow"]:AddToTheme({ImageColor3 = "Accent"})
+
                 Items["Text"] = Instances:Create("TextLabel", {
                     Parent = Items["Toggle"].Instance,
                     FontFace = Library.Font,
@@ -1898,6 +1945,7 @@ local Library do
                 if Toggle.Value then 
                     Items["Indicator"]:ChangeItemTheme({BackgroundColor3 = "Accent"})
                     Items["Indicator"]:Tween(nil, {BackgroundColor3 = Library.Theme.Accent})
+                    Items["Glow"]:Tween(nil, {ImageTransparency = 0.2})
 
                     if not Data.Risky then 
                         Items["Text"]:ChangeItemTheme({TextColor3 = "Accent"})
@@ -1906,6 +1954,7 @@ local Library do
                 else
                     Items["Indicator"]:ChangeItemTheme({BackgroundColor3 = "Element"})
                     Items["Indicator"]:Tween(nil, {BackgroundColor3 = Library.Theme.Element})
+                    Items["Glow"]:Tween(nil, {ImageTransparency = 1})
 
                     if not Data.Risky then
                         Items["Text"]:ChangeItemTheme({TextColor3 = "Text"})
@@ -2220,6 +2269,21 @@ local Library do
                 Rotation = 90,
                 Color = RGBSequence{RGBSequenceKeypoint(0, FromRGB(255, 255, 255)), RGBSequenceKeypoint(1, FromRGB(127, 127, 127))}
             }) 
+
+            -- [GLOW] Slider indicator glow (tinted by Accent)
+            Items["Glow"] = Instances:Create("ImageLabel", {
+                Parent = Items["Indicator"].Instance,
+                Name = "\0",
+                Image = "rbxassetid://129224956712931",
+                BackgroundTransparency = 1,
+                AnchorPoint = Vector2New(0.5, 0.5),
+                Position = UDim2New(0.5, 0, 0.5, 0),
+                Size = UDim2New(1, 12, 1, 12),
+                ImageTransparency = 0.3,
+                ZIndex = 0,
+                BorderSizePixel = 0,
+                BackgroundColor3 = FromRGB(255, 255, 255)
+            })  Items["Glow"]:AddToTheme({ImageColor3 = "Accent"})
 
             Items["Value"] = Instances:Create("TextLabel", {
                 Parent = Items["Slider"].Instance,
@@ -3549,6 +3613,21 @@ local Library do
                 Items["KeyButton"]:Tooltip(Data.Tooltip)
             end
 
+            -- [GLOW] Keybind button glow (tinted by Accent)
+            Items["Glow"] = Instances:Create("ImageLabel", {
+                Parent = Items["KeyButton"].Instance,
+                Name = "\0",
+                Image = "rbxassetid://129224956712931",
+                BackgroundTransparency = 1,
+                AnchorPoint = Vector2New(0.5, 0.5),
+                Position = UDim2New(0.5, 0, 0.5, 0),
+                Size = UDim2New(1, 10, 1, 10),
+                ImageTransparency = 0.4,
+                ZIndex = 0,
+                BorderSizePixel = 0,
+                BackgroundColor3 = FromRGB(255, 255, 255)
+            })  Items["Glow"]:AddToTheme({ImageColor3 = "Accent"})
+
             Items["KeybindWindow"] = Components.Window({
                 Position = UDim2New(1, 0, 0, 25),
                 Size = UDim2New(0, 70, 0, 75),
@@ -4248,7 +4327,8 @@ local Library do
             Position = UDim2New(0, Camera.ViewportSize.X / 4, 0, Camera.ViewportSize.Y / 3),
             Size = Window.Size,
             Parent = self.Holder,
-            Draggable = true
+            Draggable = true,
+            Glow = true  -- [GLOW] enable main window glow
         }) do 
             Items["Title"] = Instances:Create("Frame", {
                 Parent = Items["Inline"].Instance,
@@ -4259,6 +4339,21 @@ local Library do
                 BorderSizePixel = 2,
                 BackgroundColor3 = FromRGB(13, 13, 13)
             })  Items["Title"]:AddToTheme({BackgroundColor3 = "Inline", BorderColor3 = "Outline"})
+
+            -- [GLOW] Top bar / title glow (tinted by Accent)
+            Items["TitleGlow"] = Instances:Create("ImageLabel", {
+                Parent = Items["Title"].Instance,
+                Name = "\0",
+                Image = "rbxassetid://129224956712931",
+                BackgroundTransparency = 1,
+                AnchorPoint = Vector2New(0.5, 0.5),
+                Position = UDim2New(0.5, 0, 0.5, 0),
+                Size = UDim2New(1, 15, 1, 15),
+                ImageTransparency = 0.4,
+                ZIndex = 0,
+                BorderSizePixel = 0,
+                BackgroundColor3 = FromRGB(255, 255, 255)
+            })  Items["TitleGlow"]:AddToTheme({ImageColor3 = "Accent"})
 
             Instances:Create("UIStroke", {
                 Parent = Items["Title"].Instance,
